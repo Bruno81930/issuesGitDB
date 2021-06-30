@@ -72,7 +72,7 @@ jobs:
 
 
       - name: execute
-        run: python Main.py ${{ matrix.commit_ind }} ${{github.event.issue.title}} ${{github.event.issue.body}} quick
+        run: python Main.py ${{ matrix.commit_ind }} ${{github.event.issue.title}} ${{github.event.issue.body}} 
 
       - name: ls
         run: ls -R
