@@ -19,6 +19,7 @@ if __name__ == '__main__':
         commits_end = commits_start + window_size
         PROJECT_NAME = sys.argv[2]  # "commons-math"
         JIRA_PROJECT_ID = sys.argv[3]  # "MATH"
+        USE_DB = False
         if len(sys.argv) > 4:
             QUICK_MODE = True
 
