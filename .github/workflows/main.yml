@@ -53,6 +53,8 @@ jobs:
           pip install pandas
           pip install numpy
           pip install pydriller
+          pip install dataclasses
+          pip install jsons
 
       - name: javadiff_install
         run: python ./javadiff/setup.py install
