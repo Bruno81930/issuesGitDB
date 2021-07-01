@@ -14,7 +14,7 @@ if __name__ == '__main__':
     USE_DB = True
     QUICK_MODE = False
     if len(sys.argv) > 3:
-        window_size = 1
+        window_size = 10
         commits_start = int(sys.argv[1]) * window_size
         commits_end = commits_start + window_size
         PROJECT_NAME = sys.argv[2]  # "commons-math"
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         if len(sys.argv) > 4:
             QUICK_MODE = True
 
-    DB_PATH = r"CommitIssueDB.db"
+    DB_PATH = f"CommitIssueDB_{commits_start}.db"
     GIT_REPO_PATH_LOCAL = r"local_repo"
     JIRA_PATH = r"http://issues.apache.org/jira"
 
