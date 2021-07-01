@@ -8,12 +8,13 @@ import os
 
 
 class Connection:
-    def __init__(self, conn_path, use_db=True):
+    def __init__(self, conn_path, use_db=True, commit_ind=0):
         self.output_dir = os.path.realpath('./data')
         self.connection_path = os.path.join(self.output_dir, conn_path)
         self.use_db = use_db
         if self.use_db:
             self.init_db()
+        self.commit_ind = commit_ind
         self.projects = []
         self.commits = []
         self.issues = []
@@ -42,12 +43,12 @@ class Connection:
     def close(self):
         pd.DataFrame(self.method_data, columns=["CommitID", "MethodName", "OldNew", "LineNumber", "Content", "Changed", "Meaning", "Tokens", "Halstead", "NewPath"]).to_csv(os.path.join(self.output_dir, r"method_data.csv"), index=False, sep='!')
         if self.use_db:
-            pd.DataFrame(self.projects, columns=["ProjectName", "JiraProjectId", "GitRepositoryPath"]).to_csv(os.path.join(self.output_dir, r"projects.csv"), index=False, sep='!')
-            pd.DataFrame(self.commits, columns=["CommitID", "ProjectName", "Summary", "Message", "Date", "ParentID"]).to_csv(os.path.join(self.output_dir, r"commits.csv"), index=False, sep='!')
-            pd.DataFrame(self.issues, columns=["IssueID", "IssueType", "ProjectName", "Summary", "Description", "Status", "Date"]).to_csv(os.path.join(self.output_dir, r"issues.csv"), index=False, sep='!')
-            pd.DataFrame(self.commits_files, columns=["CommitID", "Path", "FileType"]).to_csv(os.path.join(self.output_dir, r"commits_files.csv"), index=False, sep='!')
-            pd.DataFrame(self.commit_changes, columns=["CommitID", "MethodName", "NewPath", "OldPath"]).to_csv(os.path.join(self.output_dir, r"commit_changes.csv"), index=False, sep='!')
-            pd.DataFrame(self.commits_issues_linkage, columns=["IssueID", "CommitID"]).to_csv(os.path.join(self.output_dir, r"commits_issues_linkage.csv"), index=False, sep='!')
+            pd.DataFrame(self.projects, columns=["ProjectName", "JiraProjectId", "GitRepositoryPath"]).to_csv(os.path.join(self.output_dir, f"projects_{self.commit_ind}.csv"), index=False, sep='!')
+            pd.DataFrame(self.commits, columns=["CommitID", "ProjectName", "Summary", "Message", "Date", "ParentID"]).to_csv(os.path.join(self.output_dir, f"commits_{self.commit_ind}.csv"), index=False, sep='!')
+            pd.DataFrame(self.issues, columns=["IssueID", "IssueType", "ProjectName", "Summary", "Description", "Status", "Date"]).to_csv(os.path.join(self.output_dir, f"issues_{self.commit_ind}.csv"), index=False, sep='!')
+            pd.DataFrame(self.commits_files, columns=["CommitID", "Path", "FileType"]).to_csv(os.path.join(self.output_dir, f"commits_files_{self.commit_ind}.csv"), index=False, sep='!')
+            pd.DataFrame(self.commit_changes, columns=["CommitID", "MethodName", "NewPath", "OldPath"]).to_csv(os.path.join(self.output_dir, f"commit_changes_{self.commit_ind}.csv"), index=False, sep='!')
+            pd.DataFrame(self.commits_issues_linkage, columns=["IssueID", "CommitID"]).to_csv(os.path.join(self.output_dir, f"commits_issues_linkage_{self.commit_ind}.csv"), index=False, sep='!')
             self.connection.close()
 
     def insert_project(self, projectName, JiraProjectId):
