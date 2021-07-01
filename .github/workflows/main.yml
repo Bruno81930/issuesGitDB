@@ -87,3 +87,70 @@ jobs:
           name: data
           # A file, directory or wildcard pattern that describes what to upload
           path: ./data
+          
+  aggregate:
+      # The type of runner that the job will run on
+      runs-on: ubuntu-latest
+      continue-on-error: true
+      needs: build
+  
+      steps:
+      
+        - uses: actions/checkout@v2
+
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: 3.7
+
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install pandas
+        - uses: actions/download-artifact@v2
+        
+        - name: echo
+          run: |
+              mkdir ./results
+          
+        - name: Display structure of downloaded files
+          run: ls -R
+        
+        - name: merge all artifacts
+          shell: python
+          run: |
+              import pandas as pd
+              import glob
+              all_commit_changes_files = glob.glob("./data/commit_changes_*.csv")
+              all_commits_files = glob.glob("./data/commit_files_*.csv")
+              all_commit_issues_linkage = glob.glob("./data/commit_issues_linkage_*.csv")
+              all_commits = glob.glob("./data/commits_*.csv")
+              all_issues = glob.glob("./data/issues_*.csv")
+              all_method_data = glob.glob("./data/method_data_*.csv")
+              all_projects = glob.glob("./data/projects_*.csv")
+              
+              def agg(all_files, out):
+                li = []
+                for filename in all_files:
+                    df = pd.read_csv(filename, index_col=None, header=0)
+                    li.append(df)
+                pd.concat(li, axis=0, ignore_index=True).to_csv(f"./results/{out}.csv", index=False)
+                
+              agg("all_commit_changes_files", "commit_changes")
+              agg("all_commits_files", "commit_files")
+              agg("all_commit_issues_linkage", "commit_issues_linkage")
+              agg("all_commits", "commits")
+              agg("all_issues", "issues")
+              agg("all_method_data", "method_data")
+              agg("all_projects", "projects")
+                
+              
+        - name: Upload data
+          if: ${{ always() }}
+          uses: actions/upload-artifact@v2
+          with:
+            # Artifact name
+            name: all_data
+            # A file, directory or wildcard pattern that describes what to upload
+            path: ./results
+    
