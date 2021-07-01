@@ -93,6 +93,7 @@ jobs:
       runs-on: ubuntu-latest
       continue-on-error: true
       needs: build
+      if: always()
   
       steps:
       
