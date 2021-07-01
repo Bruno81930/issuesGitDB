@@ -27,7 +27,7 @@ if __name__ == '__main__':
     JIRA_PATH = r"http://issues.apache.org/jira"
 
     # Get DB connection
-    db_connection = db.get_connection(DB_PATH, USE_DB)
+    db_connection = db.get_connection(DB_PATH, USE_DB, commits_start)
 
     # Project Handling
     db_connection.insert_project(PROJECT_NAME, JIRA_PROJECT_ID)
