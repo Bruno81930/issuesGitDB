@@ -11,7 +11,7 @@ if __name__ == '__main__':
     JIRA_PROJECT_ID = sys.argv[2] # "MATH"
     commits_start = None
     commits_end = None
-    USE_DB = True
+    USE_DB = False
     QUICK_MODE = False
     if len(sys.argv) > 3:
         window_size = 10
