@@ -112,8 +112,8 @@ class Connection:
         self.commits_issues_linkage.append((issue_id, commit.id))
 
 
-def get_connection(path, use_db):
-    return Connection(path, use_db)
+def get_connection(path, use_db, commit_ind):
+    return Connection(path, use_db, commit_ind)
 
 
 def close_connection(conn):
