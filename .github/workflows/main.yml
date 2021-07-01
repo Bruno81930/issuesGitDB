@@ -121,6 +121,7 @@ jobs:
           run: |
               import pandas as pd
               import glob
+              all_method_data = glob.glob("./data/method_data_*.csv")
               all_commit_changes_files = glob.glob("./data/commit_changes_*.csv")
               all_commits_files = glob.glob("./data/commit_files_*.csv")
               all_commit_issues_linkage = glob.glob("./data/commit_issues_linkage_*.csv")
@@ -136,13 +137,14 @@ jobs:
                     li.append(df)
                 pd.concat(li, axis=0, ignore_index=True).to_csv(f"./results/{out}.csv", index=False)
                 
-              agg("all_commit_changes_files", "commit_changes")
-              agg("all_commits_files", "commit_files")
-              agg("all_commit_issues_linkage", "commit_issues_linkage")
-              agg("all_commits", "commits")
-              agg("all_issues", "issues")
-              agg("all_method_data", "method_data")
-              agg("all_projects", "projects")
+              agg(all_method_data, "method_data")
+              agg(all_commit_changes_files, "commit_changes")
+              agg(all_commits_files, "commit_files")
+              agg(all_commit_issues_linkage, "commit_issues_linkage")
+              agg(all_commits, "commits")
+              agg(all_issues, "issues")
+              agg(all_method_data, "method_data")
+              agg(all_projects, "projects")
                 
               
         - name: Upload data
