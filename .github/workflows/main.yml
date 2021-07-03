@@ -19,7 +19,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        commit_ind: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+        commit_ind: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+          #commit_ind: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49]
+          #commit_ind: [50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74]
+          #commit_ind: [75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -88,72 +91,72 @@ jobs:
           # A file, directory or wildcard pattern that describes what to upload
           path: ./data
           
-  aggregate:
-      # The type of runner that the job will run on
-      runs-on: ubuntu-latest
-      continue-on-error: true
-      needs: build
-      if: always()
-  
-      steps:
-      
-        - uses: actions/checkout@v2
-
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: 3.7
-
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install pandas
-        - uses: actions/download-artifact@v2
-        
-        - name: echo
-          run: |
-              mkdir ./results
-          
-        - name: Display structure of downloaded files
-          run: ls -R
-        
-        - name: merge all artifacts
-          shell: python
-          run: |
-              import pandas as pd
-              import glob
-              all_method_data = glob.glob("./data/method_data_*.csv")
-              all_commit_changes_files = glob.glob("./data/commit_changes_*.csv")
-              all_commits_files = glob.glob("./data/commit_files_*.csv")
-              all_commit_issues_linkage = glob.glob("./data/commit_issues_linkage_*.csv")
-              all_commits = glob.glob("./data/commits_*.csv")
-              all_issues = glob.glob("./data/issues_*.csv")
-              all_method_data = glob.glob("./data/method_data_*.csv")
-              all_projects = glob.glob("./data/projects_*.csv")
-              
-              def agg(all_files, out):
-                li = []
-                for filename in all_files:
-                    df = pd.read_csv(filename, index_col=None, header=0, sep="!")
-                    li.append(df)
-                pd.concat(li, axis=0, ignore_index=True).to_csv(f"./results/{out}.csv", index=False, sep="!")
-                
-              agg(all_method_data, "method_data")
-              agg(all_commit_changes_files, "commit_changes")
-              agg(all_commits_files, "commit_files")
-              agg(all_commit_issues_linkage, "commit_issues_linkage")
-              agg(all_commits, "commits")
-              agg(all_issues, "issues")
-              agg(all_method_data, "method_data")
-              agg(all_projects, "projects")
-                
-              
-        - name: Upload data
-          if: ${{ always() }}
-          uses: actions/upload-artifact@v2
-          with:
-            # Artifact name
-            name: all_data
-            # A file, directory or wildcard pattern that describes what to upload
-            path: ./results
-    
+            #  aggregate:
+            #      # The type of runner that the job will run on
+            #      runs-on: ubuntu-latest
+            #      continue-on-error: true
+            #      needs: build
+            #      if: always()
+            #  
+            #      steps:
+            #      
+            #        - uses: actions/checkout@v2
+            #
+            #        - name: Set up Python
+            #          uses: actions/setup-python@v2
+            #          with:
+            #            python-version: 3.7
+            #
+            #        - name: Install dependencies
+            #          run: |
+            #            python -m pip install --upgrade pip
+            #            pip install pandas
+            #        - uses: actions/download-artifact@v2
+            #        
+            #        - name: echo
+            #          run: |
+            #              mkdir ./results
+            #          
+            #        - name: Display structure of downloaded files
+            #          run: ls -R
+            #        
+            #        - name: merge all artifacts
+            #          shell: python
+            #          run: |
+            #              import pandas as pd
+            #              import glob
+            #              all_method_data = glob.glob("./data/method_data_*.csv")
+            #              all_commit_changes_files = glob.glob("./data/commit_changes_*.csv")
+            #              all_commits_files = glob.glob("./data/commit_files_*.csv")
+            #              all_commit_issues_linkage = glob.glob("./data/commit_issues_linkage_*.csv")
+            #              all_commits = glob.glob("./data/commits_*.csv")
+            #              all_issues = glob.glob("./data/issues_*.csv")
+            #              all_method_data = glob.glob("./data/method_data_*.csv")
+            #              all_projects = glob.glob("./data/projects_*.csv")
+            #              
+            #              def agg(all_files, out):
+            #                li = []
+            #                for filename in all_files:
+            #                    df = pd.read_csv(filename, index_col=None, header=0, sep="!")
+            #                    li.append(df)
+            #                pd.concat(li, axis=0, ignore_index=True).to_csv(f"./results/{out}.csv", index=False, sep="!")
+            #                
+            #              agg(all_method_data, "method_data")
+            #              agg(all_commit_changes_files, "commit_changes")
+            #              agg(all_commits_files, "commit_files")
+            #              agg(all_commit_issues_linkage, "commit_issues_linkage")
+            #              agg(all_commits, "commits")
+            #              agg(all_issues, "issues")
+            #              agg(all_method_data, "method_data")
+            #              agg(all_projects, "projects")
+            #                
+            #              
+            #        - name: Upload data
+            #          if: ${{ always() }}
+            #          uses: actions/upload-artifact@v2
+            #          with:
+            #            # Artifact name
+            #            name: all_data
+            #            # A file, directory or wildcard pattern that describes what to upload
+            #            path: ./results
+            #    
